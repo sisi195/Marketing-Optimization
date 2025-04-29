@@ -61,7 +61,11 @@ The Colab notebook is organized into the following logical steps:
    - Summarize findings, answer the key research questions, and outline future work.
 
 ## How to Run the Notebook
-
 1. **Clone the repository:**  
    ```bash
   git clone https://github.com/sisi195/MarketMind.git
+
+Acknowledgements
+Social Network Ads Dataset: Source: Kaggle Dataset
+
+Consumer Behavior Dataset: Source: Online Advertisement Click-Through Rates Dataset Citation: Tawade, Jagadish; Kulkarni, Nitiraj (2024)
