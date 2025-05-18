@@ -1,101 +1,84 @@
-# MarketMind: Machine Learning for Marketing Optimization
+# MarketMind: Predicting Ad Performance with Consumer Behavior Data
 
-# Final Analysis and Conclusions  
-**Sierra Gordon**  
-*Date: 5/15/25*
+## Overview
 
----
+In this project, I built an end-to-end pipeline to analyze and predict consumer engagement with online advertisements. By cleaning a rich dataset, performing exploratory data analysis (EDA) with interactive Plotly charts, and developing machine learning pipelines, I explored the complex relationships between user demographics, ad attributes, and engagement metrics (clicks and conversion rates). This analysis not only unveiled insights into the drivers of ad performance but also set the stage for predictive modeling to optimize digital marketing strategies.
 
-## Abstract
+## Dataset
 
-In this analysis, I aimed to understand the factors driving consumer ad clicks and conversions. Using a rich dataset that includes consumer demographic, behavioral, and ad-related features, I developed predictive models to forecast ad clicks and classify conversion behavior. The regression approach proved highly effective—explaining nearly 97% of the variability in ad clicks—while the classification task highlighted challenges in accurately identifying high-conversion cases. This report details the entire pipeline, from data cleaning and exploratory visualizations to model building and evaluation, and concludes with insights and recommendations for future work.
+**Dataset:** [Online Advertisement Click-Through Rates](https://data.mendeley.com/datasets/wrvjmdtjd9/1)  
+**Published:** 22 April 2024  
+**Version:** 1  
+**DOI:** [10.17632/wrvjmdtjd9.1](http://dx.doi.org/10.17632/wrvjmdtjd9.1)  
+**Contributors:** Jagadish Tawade, Nitiraj Kulkarni
 
----
+**Description:**  
+This dataset offers a comprehensive view of how users interact with online ads. It includes:
+- User demographics: age, gender, income, and location.
+- Ad characteristics: ad type, topic, and placement.
+- Engagement metrics: clicks per user, click-through rates, and conversion rates.
+- Temporal context: click dates (from which features like day and month are extracted).
 
-## 1. Introduction
+This wealth of data is crucial for understanding user behavior and optimizing ad targeting strategies.
 
-In today's digital marketing landscape, accurately predicting ad performance is critical. My research focused on these key questions:
+**Citation:**  
+Tawade, Jagadish; Kulkarni, Nitiraj (2024). “Dataset: Online Advertisement Click-Through Rates”. Mendeley Data, V1. doi:10.17632/wrvjmdtjd9.1
 
-1. **What factors influence consumer clicks and conversions?**
-2. **Which factors drive conversions the most?**
-3. **How do demographics affect ad performance?**
-4. **Can we predict the number of ad clicks using consumer demographic, behavioral, and ad-related features?**
+## Project Structure
 
-I set out to answer these questions by exploring the data in depth, creating insightful visualizations, and building both regression and classification models. 
+- **Data Cleaning & Preprocessing:**  
+  - Standardized column names and handled missing values.
+  - Converted financial fields (e.g., `income`) and date fields (`click_date`) to proper formats.
+  - Engineered additional features such as `click_day`, `click_month`, and interaction terms (e.g., `income_x_clicks`, `ctr_x_conversion`).
 
----
+- **Exploratory Data Analysis (EDA):**  
+  I used interactive Plotly charts to answer key questions:
+  - _How does income affect click behavior?_ (Scatter Plot: Income vs. Clicks colored by Age)
+  - _What are the relationships among the numerical features?_ (Correlation Heatmap)
+  - _How do click rates vary across income groups?_ (Bar Chart using custom income bins: 10K–25K, 25K–40K, 40K–55K, 55K–70K, 70K–90K with a gradient from yellow to purple)
+  - _Are there differences in click behavior between Female and Male consumers?_ (Box Plot: Clicks by Gender)
+  - _How do conversion rates change over time by gender?_ (Conversion Map: Average Conversion Rate over Time by Gender)
 
-## 2. Data Exploration and Preprocessing
+- **Machine Learning Pipeline:**  
+  Two predictive models were built:
+  - **Regression Pipeline:**  
+    - Predicting the continuous number of ad clicks using a Random Forest regressor.
+    - Model performance was evaluated with Mean Squared Error (MSE) and R², and hyperparameter tuning was done via GridSearchCV.
+  - **Classification Pipeline:**  
+    - Classifying consumer engagement (high vs. low clicks) based on the median click count.
+    - Evaluated using accuracy, F1 score, and a detailed classification report.
 
-### Data Loading & Cleaning
-I began by loading the raw consumer data from a CSV file. To avoid including non-predictive or leaky features, I dropped variables such as `click_date`, `conversion_rate`, `ctr_x_conversion`, and `estimated_roi`. Missing values were handled by filling numeric features with their mean and categorical features with the mode. After these steps, the resulting data had:
-- **Shape after dropping leaky features:** (496, 17)
-- **Features shape after one-hot encoding:** (496, 27)
+## Installation & Usage
 
-### Feature Engineering
-A key step was to create an additional categorical variable for age by binning it into groups: 18–25, 25–35, 35–45, 45–55, and 55+. This not only helped with visualizing age-specific trends but also enriched the feature set for modeling.
+1. **Clone the Repository:**
+   ```bash
+  git clone https://github.com/yourusername/MarketMind.git
+   cd MarketMind
+pip install -r requirements.txt
 
----
+MIT License
 
-## 3. Exploratory Data Analysis and Visualizations
+Copyright (c) 2025 Sierra
 
-### Age Binning and Distribution
-I created the `age_binned` column using `pd.cut()` to group ages. This allowed me to observe the distribution of consumers across different age ranges.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-**Figure 1: Age Distribution by Bins**  
-*Interactive graph from Colab:*  
-![Age Binned Distribution](path/to/age_binned_plot.png)  
-*Hover over for additional details.*
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
-### Conversion Rate by Age and Gender
-Using interactive box plots, I visualized conversion rate distributions by age group and gender (female = pink, male = blue). These plots revealed differences in conversion spread across different demographic groups.
+Contributing
+If you’d like to contribute improvements or report issues, feel free to open an issue or submit a pull request. Your feedback and contributions are welcome!
 
-**Figure 2: Conversion Rate Distribution by Age Group and Gender**  
-![Conversion Rate Box Plot](path/to/box_plot.png)
+Acknowledgments
+Dataset Contributors: Jagadish Tawade and Nitiraj Kulkarni for providing the comprehensive Online Advertisement Click-Through Rates dataset via Mendeley Data.
 
-Additionally, a bar chart comparing average conversion rates by gender helped to clarify overall differences between males and females.
-
-**Figure 3: Average Conversion Rate by Gender**  
-![Conversion Rate Bar Chart](path/to/bar_chart.png)
-
-### Correlation Heatmap
-I generated a correlation heatmap for continuous variables (age, clicks, conversion rate, income_scaled) to examine inter-variable relationships. This visualization helped me assess potential multicollinearity and understand which features may be strongly associated.
-
-**Figure 4: Correlation Heatmap**  
-![Correlation Heatmap](path/to/heatmap.png)
-
----
-
-## 4. Modeling and Evaluation
-
-### Regression Analysis: Predicting Ad Clicks
-
-#### Model Development
-I built a Random Forest Regressor to predict the number of ad clicks. After a preliminary (baseline) model achieved a Test R² of around 0.75, I used GridSearchCV to fine-tune the model. With the best parameters (`{'max_depth': None, 'min_samples_leaf': 1, 'n_estimators': 300}`), the model's performance improved dramatically:
-- **Test R² (Tuned Model):** ~0.97  
-- **Test MSE:** ~0.06
-
-#### Residual Analysis
-To validate the regression model further, I examined the residuals (actual – predicted). The **Residuals vs. Predicted** plot shows that the errors are tightly clustered around zero, and the distribution of residuals (via a histogram with a KDE overlay) is near-normal.
-
-**Figure 5: Residuals vs. Predicted Values**  
-![Residuals vs. Predicted Plot](path/to/residuals_plot.png)
-
-**Figure 6: Distribution of Residuals**  
-![Residual Distribution Plot](path/to/residual_histogram.png)
-
-*Interpretation:*  
-These visualizations confirm that the regression model is performing very well, with minimal and randomly scattered errors.
-
----
-
-### Classification Analysis: High vs. Low Conversions
-
-#### Model Development
-For classification, I converted the continuous click values into a binary target—classifying consumers into “high” or “low” conversion groups based on the median number of clicks. A Random Forest Classifier was then trained on this data. The classifier achieved:
-- **Test Accuracy:** 77%
-- **Test F1 Score:** ~0.34
-
-The confusion matrix indicates that while the model correctly classifies negatives (low clicks), it struggles with the positive class (high clicks).
-
-**Figure 7: Confusion Matrix**  
+Inspiration: This project was developed to understand consumer behavior better and improve ad targeting strategies through data-driven insights.
