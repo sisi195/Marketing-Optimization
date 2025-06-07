@@ -6,10 +6,9 @@ In this project, I built an end-to-end pipeline to analyze and predict consumer 
 
 ## Dataset
 
-**Dataset:** [Online Advertisement Click-Through Rates](https://data.mendeley.com/datasets/wrvjmdtjd9/1)  
-**Published:** 22 April 2024  
-**Version:** 1  
-**DOI:** [10.17632/wrvjmdtjd9.1](http://dx.doi.org/10.17632/wrvjmdtjd9.1)  
+**Dataset:** [Online Advertisement Click-Through Rates][(https://data.mendeley.com/datasets/wrvjmdtjd9/1)]  
+**DOI:** [10.17632/wrvjmdtjd9.1][(http://dx.doi.org/10.17632/wrvjmdtjd9.1)]  
+   
 **Contributors:** Jagadish Tawade, Nitiraj Kulkarni
 
 **Description:**  
@@ -24,61 +23,155 @@ This wealth of data is crucial for understanding user behavior and optimizing ad
 **Citation:**  
 Tawade, Jagadish; Kulkarni, Nitiraj (2024). “Dataset: Online Advertisement Click-Through Rates”. Mendeley Data, V1. doi:10.17632/wrvjmdtjd9.1
 
-## Project Structure
+## Data Exploration and Preprocessing
 
-- **Data Cleaning & Preprocessing:**  
-  - Standardized column names and handled missing values.
-  - Converted financial fields (e.g., `income`) and date fields (`click_date`) to proper formats.
-  - Engineered additional features such as `click_day`, `click_month`, and interaction terms (e.g., `income_x_clicks`, `ctr_x_conversion`).
+### Data Cleaning & Preprocessing
 
-- **Exploratory Data Analysis (EDA):**  
-  I used interactive Plotly charts to answer key questions:
-  - _How does income affect click behavior?_ (Scatter Plot: Income vs. Clicks colored by Age)
-  - _What are the relationships among the numerical features?_ (Correlation Heatmap)
-  - _How do click rates vary across income groups?_ (Bar Chart using custom income bins: 10K–25K, 25K–40K, 40K–55K, 55K–70K, 70K–90K with a gradient from yellow to purple)
-  - _Are there differences in click behavior between Female and Male consumers?_ (Box Plot: Clicks by Gender)
-  - _How do conversion rates change over time by gender?_ (Conversion Map: Average Conversion Rate over Time by Gender)
+I cleaned and prepared the dataset using **Power BI, Excel, and Google Colab** to ensure accuracy and consistency before modeling.
 
-- **Machine Learning Pipeline:**  
-  Two predictive models were built:
-  - **Regression Pipeline:**  
-    - Predicting the continuous number of ad clicks using a Random Forest regressor.
-    - Model performance was evaluated with Mean Squared Error (MSE) and R², and hyperparameter tuning was done via GridSearchCV.
-  - **Classification Pipeline:**  
-    - Classifying consumer engagement (high vs. low clicks) based on the median click count.
-    - Evaluated using accuracy, F1 score, and a detailed classification report.
+#### **Power BI: Initial Cleaning**
+- Removed **negative values** from `Age` and `Income` to eliminate unrealistic entries.
+- Standardized missing data:
+  - **Numeric fields:** Filled with the mean.
+  - **Categorical fields:** Filled with the mode.
+- Checked for duplicate entries and ensured data integrity.
 
-## Installation & Usage
+#### **Excel: Data Formatting**
+- Adjusted financial columns (`Income`) to ensure proper numerical formatting.
+- Converted date fields (`click_date`) into **datetime format** for feature extraction.
 
-1. **Clone the Repository:**
-   ```bash
-  git clone https://github.com/yourusername/MarketMind.git
-   cd MarketMind
-pip install -r requirements.txt
+#### **Google Colab: Final Preprocessing**
+- **One-hot encoded categorical features** (e.g., `Gender`, `Ad_Type`) to make them machine-readable.
+- **Scaled income** to improve regression model performance.
+- Created additional features:
+  - Extracted `click_day` and `click_month` from `click_date` for temporal analysis.
+  - Generated interaction terms (`income_x_clicks`, `ctr_x_conversion`) to better understand relationships between variables.
 
-MIT License
+After completing these steps, the dataset had:
+- **Shape after removing leaky features:** `(496, 17)`
+- **Shape after one-hot encoding categorical features:** `(496, 27)`
 
-Copyright (c) 2025 Sierra
+- ## **Exploratory Data Analysis (EDA)**  
+To understand **consumer engagement with online advertisements**, I used **interactive Plotly charts** to analyze key trends in the dataset. Each visualization highlights relationships between **user demographics, ad attributes, and engagement metrics**.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+### **Income vs. Click Behavior**  
+- **Scatter Plot:** Income vs. Clicks, colored by Age  
+- **Insight:** Higher-income users tend to **click on more ads**, but engagement varies significantly across age groups.  
+- **Key trend:** Younger consumers (**18–35**) with mid-range incomes show **higher click rates**, while older users are less engaged.  
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+![Income vs Clicks][(images/Income_vs_Clicks.png)]
 
-Contributing
-If you’d like to contribute improvements or report issues, feel free to open an issue or submit a pull request. Your feedback and contributions are welcome!
+---
 
-Acknowledgments
-Dataset Contributors: Jagadish Tawade and Nitiraj Kulkarni for providing the comprehensive Online Advertisement Click-Through Rates dataset via Mendeley Data.
+### **Relationships Among Numerical Features**  
+- **Correlation Heatmap**  
+- **Insight:** Click-through rates have a **strong correlation** with income and ad type.  
+- **Key observation:** Higher conversion rates often align with **higher engagement metrics like clicks per user**, confirming that **income and ad placement significantly impact ad effectiveness**.  
 
-Inspiration: This project was developed to understand consumer behavior better and improve ad targeting strategies through data-driven insights.
+![Correlation Heatmap][(Correlation_Heatmap-1.png)]
+
+---
+
+
+### **Click Rates Across Income Groups**  
+- **Bar Chart:** Clicks by income bins (10K–90K), color-coded from yellow to purple  
+- **Insight:** Click rates tend to be **higher in mid-income groups ($25K–40K)** and decline slightly in **higher-income brackets ($55K+)**.  
+- **Potential reasoning:** Mid-income consumers **engage more frequently with ads**, possibly due to targeted marketing strategies.  
+
+![(Clicks_vs_Income)]![(images/Clicks_vs_Income.png)] 
+
+---
+
+### **Click Behavior by Gender**  
+- **Box Plot:** Clicks by Gender  
+- **Insight:** Female consumers generally have **higher median click rates**, but male consumers exhibit **greater variability** in engagement.  
+- **Key takeaway:** Gender-based targeting in digital marketing **may influence ad effectiveness**, with females showing **consistent engagement patterns** across income levels.  
+
+![(Clicks_By_Gender)]![(images/Clicks_by_Gender.png)]
+
+---
+
+### **Conversion Rate Trends Over Time**  
+- **Conversion Rate Timeline:** Monthly trends by gender  
+- **Insight:** Conversion rates **fluctuate seasonally**, with increases around **holiday periods** and promotional campaigns.  
+- **Key trend:** Female consumers exhibit **higher conversion stability**, while male engagement tends to be **less predictable** across different months. 
+
+![(Conversion_Rate_Timeline)]![(Conversion_Rate_Timeline.png)]
+
+---
+
+# **Machine Learning Pipeline**  
+To optimize ad targeting and engagement strategies, I developed **two predictive models** using machine learning.
+
+### **Regression Pipeline: Predicting Ad Clicks**  
+- **Model Used:** Random Forest Regressor  
+- **Evaluation Metrics:**  
+  - **R² Score:** 0.97 (strong predictive accuracy)  
+  - **Mean Squared Error (MSE):** 0.06  
+
+#### **Key Findings:**  
+- The model **accurately predicts ad clicks** using consumer demographics and ad attributes.  
+- **Income, age, and ad placement** are the strongest predictors of consumer engagement.  
+
+---
+
+### **Classification Pipeline: High vs. Low Engagement**  
+- **Model Used:** Random Forest Classifier  
+- **Evaluation Metrics:**  
+  - **Accuracy:** 77%  
+  - **F1 Score:** 0.34 (struggles with high conversions)  
+
+#### **Key Findings:**  
+- The model classifies **low engagement users well**, but struggles with **high conversion cases** due to imbalanced data.  
+- **Feature engineering improvements** (like ad interaction history) could enhance accuracy.  
+
+---
+
+## **Regression Performance Summary**
+| Metric | Score |
+|--------|------|
+| **MSE** | 0.486 |
+| **R² Score** | 0.7428 |
+| **Best Parameters** | {'max_depth': 15, 'min_samples_leaf': 2, 'n_estimators': 300} |
+| **Best R² Score** | 0.7455 |
+
+---
+
+## **Classification Performance Summary**
+| Metric | Score |
+|--------|------|
+| **Accuracy** | 0.84 |
+| **F1 Score** | 0.50 |
+
+#### **Classification Report**
+| Class | Precision | Recall | F1-Score | Support |
+|-------|-----------|--------|----------|---------|
+| **0 (Low Clicks)** | 0.84 | 0.99 | 0.90 | 77 |
+| **1 (High Clicks)** | 0.89 | 0.35 | 0.50 | 23 |
+
+#### **Confusion Matrix**
+[[76 1] [15 8]]
+
+---
+
+## **Project Conclusion**
+This project explored consumer ad click behavior, developed predictive models, and uncovered insights into **digital marketing optimization**.
+
+### **Key Insights**
+- **Income, gender, and ad placement strongly affect engagement.**  
+- **Regression model effectively predicts ad clicks with strong accuracy.**  
+- **Classification model struggles with high engagement predictions, requiring refinement.**  
+
+### **Future Work**
+- **Enhance feature engineering** (include ad interaction history).  
+- **Test ensemble methods** (Boosting/Bagging) for better classification.  
+- **Integrate external datasets** for deeper insights into consumer behavior trends.  
+
+---
+
+## **References & Repository Details**
+- **Dataset:** [Online Advertisement Click-Through Rates][(https://data.mendeley.com/datasets/wrvjmdtjd9/1)] 
+- **DOI:** [10.17632/wrvjmdtjd9.1][(http://dx.doi.org/10.17632/wrvjmdtjd9.1)]  
+- **GitHub Repository:** [MarketMind][(https://github.com/sisi195/Marketing-Optimization)]  
+
+---
