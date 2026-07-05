@@ -1,177 +1,137 @@
 # MarketMind: Predicting Ad Performance with Consumer Behavior Data
 
+An end-to-end machine learning pipeline that analyzes how consumers engage with
+online advertisements and predicts ad performance from user demographics and ad
+attributes.
+
 ## Overview
 
-In this project, I built an end-to-end pipeline to analyze and predict consumer engagement with online advertisements. By cleaning a rich dataset, performing exploratory data analysis (EDA) with interactive Plotly charts, and developing machine learning pipelines, I explored the complex relationships between user demographics, ad attributes, and engagement metrics (clicks and conversion rates). This analysis not only unveiled insights into the drivers of ad performance but also set the stage for predictive modeling to optimize digital marketing strategies.
+This project builds a complete workflow for understanding and predicting digital
+ad engagement. It covers data cleaning, exploratory data analysis with
+interactive Plotly visualizations, and two supervised machine learning pipelines:
+one to predict the number of ad clicks and one to classify users into high or low
+engagement. The goal is to identify the drivers of ad performance and demonstrate
+how predictive modeling can support digital marketing decisions.
 
 ## Dataset
 
-**Dataset:** [Online Advertisement Click-Through Rates][(https://data.mendeley.com/datasets/wrvjmdtjd9/1)]  
-**DOI:** [10.17632/wrvjmdtjd9.1][(http://dx.doi.org/10.17632/wrvjmdtjd9.1)]  
-   
-**Contributors:** Jagadish Tawade, Nitiraj Kulkarni
+- **Source:** Online Advertisement Click-Through Rates, Mendeley Data
+- **DOI:** 10.17632/wrvjmdtjd9.1
+- **Contributors:** Jagadish Tawade, Nitiraj Kulkarni
 
-**Description:**  
-This dataset offers a comprehensive view of how users interact with online ads. It includes:
-- User demographics: age, gender, income, and location.
-- Ad characteristics: ad type, topic, and placement.
-- Engagement metrics: clicks per user, click-through rates, and conversion rates.
-- Temporal context: click dates (from which features like day and month are extracted).
+The dataset describes how users interact with online ads and includes:
 
-This wealth of data is crucial for understanding user behavior and optimizing ad targeting strategies.
+- User demographics: age, gender, income, and location
+- Ad characteristics: ad type, topic, and placement
+- Engagement metrics: clicks per user, click-through rates, and conversion rates
+- Temporal context: click dates, from which day and month features are derived
 
-**Citation:**  
-Tawade, Jagadish; Kulkarni, Nitiraj (2024). “Dataset: Online Advertisement Click-Through Rates”. Mendeley Data, V1. doi:10.17632/wrvjmdtjd9.1
+**Citation:** Tawade, Jagadish; Kulkarni, Nitiraj (2024). "Dataset: Online
+Advertisement Click-Through Rates." Mendeley Data, V1. doi:10.17632/wrvjmdtjd9.1
 
-## Data Exploration and Preprocessing
+## Data Cleaning and Preprocessing
 
-### Data Cleaning & Preprocessing
+Data was prepared using Power BI, Excel, and Python in Google Colab.
 
-I cleaned and prepared the dataset using **Power BI, Excel, and Google Colab** to ensure accuracy and consistency before modeling.
+### Initial Cleaning (Power BI)
 
-#### **Power BI: Initial Cleaning**
-- Removed **negative values** from `Age` and `Income` to eliminate unrealistic entries.
-- Standardized missing data:
-  - **Numeric fields:** Filled with the mean.
-  - **Categorical fields:** Filled with the mode.
-- Checked for duplicate entries and ensured data integrity.
+- Removed negative values from `Age` and `Income` to eliminate invalid entries
+- Standardized missing data: numeric fields filled with the mean, categorical
+  fields filled with the mode
+- Checked for and removed duplicate records
 
-#### **Excel: Data Formatting**
-- Adjusted financial columns (`Income`) to ensure proper numerical formatting.
-- Converted date fields (`click_date`) into **datetime format** for feature extraction.
+### Formatting (Excel)
 
-#### **Google Colab: Final Preprocessing**
-- **One-hot encoded categorical features** (e.g., `Gender`, `Ad_Type`) to make them machine-readable.
-- **Scaled income** to improve regression model performance.
-- Created additional features:
-  - Extracted `click_day` and `click_month` from `click_date` for temporal analysis.
-  - Generated interaction terms (`income_x_clicks`, `ctr_x_conversion`) to better understand relationships between variables.
+- Standardized numerical formatting for the `Income` column
+- Converted `click_date` into datetime format for feature extraction
 
-After completing these steps, the dataset had:
-- **Shape after removing leaky features:** `(496, 17)`
-- **Shape after one-hot encoding categorical features:** `(496, 27)`
+### Feature Engineering (Python)
 
-- ## **Exploratory Data Analysis (EDA)**  
-To understand **consumer engagement with online advertisements**, I used **interactive Plotly charts** to analyze key trends in the dataset. Each visualization highlights relationships between **user demographics, ad attributes, and engagement metrics**.
+- One-hot encoded categorical features such as `Gender` and `Ad_Type`
+- Scaled income to improve regression performance
+- Extracted `click_day` and `click_month` from `click_date`
+- Created interaction terms (`income_x_clicks`, `ctr_x_conversion`)
 
-### **Income vs. Click Behavior**  
-- **Scatter Plot:** Income vs. Clicks, colored by Age  
-- **Insight:** Higher-income users tend to **click on more ads**, but engagement varies significantly across age groups.  
-- **Key trend:** Younger consumers (**18–35**) with mid-range incomes show **higher click rates**, while older users are less engaged.  
+Final dataset shape after removing leaky features: `(496, 17)`. Final shape after
+one-hot encoding: `(496, 27)`.
 
-![Income vs Clicks][(images/Income_vs_Clicks.png)]
+## Exploratory Data Analysis
 
----
+Interactive Plotly charts were used to examine the relationships between
+demographics, ad attributes, and engagement.
 
-### **Relationships Among Numerical Features**  
-- **Correlation Heatmap**  
-- **Insight:** Click-through rates have a **strong correlation** with income and ad type.  
-- **Key observation:** Higher conversion rates often align with **higher engagement metrics like clicks per user**, confirming that **income and ad placement significantly impact ad effectiveness**.  
+- **Income vs. click behavior:** Higher-income users tend to click on more ads,
+  with the strongest engagement among younger consumers (ages 18 to 35) in
+  mid-range income brackets.
+- **Feature correlations:** Click-through rates correlate with income and ad
+  type; higher conversion rates align with higher clicks per user.
+- **Click rates by income group:** Engagement peaks in mid-income groups
+  ($25K to $40K) and declines slightly above $55K.
+- **Click behavior by gender:** Female consumers show higher median click rates,
+  while male consumers show greater variability.
+- **Conversion rate over time:** Conversion rates fluctuate seasonally, with
+  female consumers showing more stable conversion patterns.
 
-![Correlation Heatmap][(Correlation_Heatmap-1.png)]
+## Machine Learning Pipelines
 
----
+Two Random Forest pipelines were built and tuned with grid search.
 
+### Regression: Predicting Ad Clicks
 
-### **Click Rates Across Income Groups**  
-- **Bar Chart:** Clicks by income bins (10K–90K), color-coded from yellow to purple  
-- **Insight:** Click rates tend to be **higher in mid-income groups ($25K–40K)** and decline slightly in **higher-income brackets ($55K+)**.  
-- **Potential reasoning:** Mid-income consumers **engage more frequently with ads**, possibly due to targeted marketing strategies.  
-
-![(Clicks_vs_Income)]![(images/Clicks_vs_Income.png)] 
-
----
-
-### **Click Behavior by Gender**  
-- **Box Plot:** Clicks by Gender  
-- **Insight:** Female consumers generally have **higher median click rates**, but male consumers exhibit **greater variability** in engagement.  
-- **Key takeaway:** Gender-based targeting in digital marketing **may influence ad effectiveness**, with females showing **consistent engagement patterns** across income levels.  
-
-![(Clicks_By_Gender)]![(images/Clicks_by_Gender.png)]
-
----
-
-### **Conversion Rate Trends Over Time**  
-- **Conversion Rate Timeline:** Monthly trends by gender  
-- **Insight:** Conversion rates **fluctuate seasonally**, with increases around **holiday periods** and promotional campaigns.  
-- **Key trend:** Female consumers exhibit **higher conversion stability**, while male engagement tends to be **less predictable** across different months. 
-
-![(Conversion_Rate_Timeline)]![(Conversion_Rate_Timeline.png)]
-
----
-
-# **Machine Learning Pipeline**  
-To optimize ad targeting and engagement strategies, I developed **two predictive models** using machine learning.
-
-### **Regression Pipeline: Predicting Ad Clicks**  
-- **Model Used:** Random Forest Regressor  
-- **Evaluation Metrics:**  
-  - **R² Score:** 0.97 (strong predictive accuracy)  
-  - **Mean Squared Error (MSE):** 0.06  
-
-#### **Key Findings:**  
-- The model **accurately predicts ad clicks** using consumer demographics and ad attributes.  
-- **Income, age, and ad placement** are the strongest predictors of consumer engagement.  
-
----
-
-### **Classification Pipeline: High vs. Low Engagement**  
-- **Model Used:** Random Forest Classifier  
-- **Evaluation Metrics:**  
-  - **Accuracy:** 77%  
-  - **F1 Score:** 0.34 (struggles with high conversions)  
-
-#### **Key Findings:**  
-- The model classifies **low engagement users well**, but struggles with **high conversion cases** due to imbalanced data.  
-- **Feature engineering improvements** (like ad interaction history) could enhance accuracy.  
-
----
-
-## **Regression Performance Summary**
 | Metric | Score |
-|--------|------|
-| **MSE** | 0.486 |
-| **R² Score** | 0.7428 |
-| **Best Parameters** | {'max_depth': 15, 'min_samples_leaf': 2, 'n_estimators': 300} |
-| **Best R² Score** | 0.7455 |
+|--------|-------|
+| Mean Squared Error | 0.486 |
+| R-squared | 0.7428 |
+| Best cross-validated R-squared | 0.7455 |
+| Best parameters | max_depth=15, min_samples_leaf=2, n_estimators=300 |
 
----
+Income, age, and ad placement were the strongest predictors of ad clicks.
 
-## **Classification Performance Summary**
+### Classification: High vs. Low Engagement
+
 | Metric | Score |
-|--------|------|
-| **Accuracy** | 0.84 |
-| **F1 Score** | 0.50 |
+|--------|-------|
+| Accuracy | 0.84 |
+| F1 Score | 0.50 |
 
-#### **Classification Report**
+**Classification report**
+
 | Class | Precision | Recall | F1-Score | Support |
 |-------|-----------|--------|----------|---------|
-| **0 (Low Clicks)** | 0.84 | 0.99 | 0.90 | 77 |
-| **1 (High Clicks)** | 0.89 | 0.35 | 0.50 | 23 |
+| 0 (Low clicks) | 0.84 | 0.99 | 0.90 | 77 |
+| 1 (High clicks) | 0.89 | 0.35 | 0.50 | 23 |
 
-#### **Confusion Matrix**
-[[76 1] [15 8]]
+**Confusion matrix**
 
----
+```
+[[76  1]
+ [15  8]]
+```
 
-## **Project Conclusion**
-This project explored consumer ad click behavior, developed predictive models, and uncovered insights into **digital marketing optimization**.
+The classifier identifies low-engagement users reliably but underpredicts
+high-engagement cases due to class imbalance.
 
-### **Key Insights**
-- **Income, gender, and ad placement strongly affect engagement.**  
-- **Regression model effectively predicts ad clicks with strong accuracy.**  
-- **Classification model struggles with high engagement predictions, requiring refinement.**  
+## Key Findings
 
-### **Future Work**
-- **Enhance feature engineering** (include ad interaction history).  
-- **Test ensemble methods** (Boosting/Bagging) for better classification.  
-- **Integrate external datasets** for deeper insights into consumer behavior trends.  
+- Income, gender, and ad placement have the strongest effect on engagement.
+- The regression model predicts ad clicks with solid accuracy.
+- The classification model is limited by class imbalance in high-engagement cases.
 
----
+## Future Work
 
-## **References & Repository Details**
-- **Dataset:** [Online Advertisement Click-Through Rates][(https://data.mendeley.com/datasets/wrvjmdtjd9/1)] 
-- **DOI:** [10.17632/wrvjmdtjd9.1][(http://dx.doi.org/10.17632/wrvjmdtjd9.1)]  
-- **GitHub Repository:** [MarketMind][(https://github.com/sisi195/Marketing-Optimization)]  
+- Expand feature engineering to include ad interaction history.
+- Apply boosting and bagging methods and class-imbalance handling to improve
+  classification.
+- Integrate external datasets for a broader view of consumer behavior.
 
----
+## Repository Contents
+
+- `marketmind.ipynb` — full analysis, visualizations, and modeling notebook
+- `README.md` — project documentation
+
+## How to Run
+
+1. Clone the repository.
+2. Open `marketmind.ipynb` in Jupyter or Google Colab.
+3. Run the cells in order. Install any missing dependencies with `pip install`
+   (pandas, numpy, scikit-learn, plotly, matplotlib, seaborn).
